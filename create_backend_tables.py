@@ -207,7 +207,16 @@ class CleanArray:
             "feedpressure", 
             "permeatepressure",
             "feedtds",
-            "permtds"
+            "permtds",
+
+            "totalroflow",
+            "totaldelflow",
+            "permeateflow",
+            "deliveryflow",
+            "concentrateflow",
+            "recycleflow",
+            "dailypermflow",
+            "inletflow"
         ]
 
         self.ro_states = {
@@ -224,8 +233,6 @@ class CleanArray:
             "feedtds": 0,
             "permtds": 0
         }
-
-        self.i = 0
 
 
     def clip_value_at_zero(self, plctime_str, value_name):
@@ -284,8 +291,8 @@ def clean_data(
         try:
             clean_array.clean_array(datetime_to_string(current_time))
             current_time = get_next_time(current_time)
-        except:
-            break
+        except Exception as e:
+            raise e
 
     local_conn.close()
 
