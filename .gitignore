@@ -1,2 +1,7 @@
 /cluster
 /data
+*.sql
+*.csv
+/__pycache__
+logfile
+/waterexp
