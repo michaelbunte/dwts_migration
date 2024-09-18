@@ -7,6 +7,7 @@ def createWaterSystemTable(systemName, cursor):
     sensor_info_table_name = f'{systemName}_sensor_info'
     alarm_table_name = f'{systemName}_alarm_table'
     data_table_name = f'{systemName}_plc_data'
+    low_res_data_table_name = f'{systemName}_plc_data_low_res'
 
     create_site_unit_table = (
         f'CREATE TABLE {unit_table_name} ('
@@ -56,7 +57,7 @@ def createWaterSystemTable(systemName, cursor):
         ) VALUES (
             '{systemName}',
             '{data_table_name}',
-            NULL,
+            '{low_res_data_table_name}',
             '{sensor_info_table_name}',
             '{alarm_table_name}',
             '{unit_table_name}',
@@ -104,8 +105,11 @@ def create_plc_tables():
     conn.autocommit = True 
     cursor = conn.cursor()
     cursor.execute(sql.SQL(create_plc_table_commands.createBluerock("bluerock_plc_values")))
+    cursor.execute(sql.SQL(create_plc_table_commands.createBluerock("bluerock_plc_values_low_res")))
     cursor.execute(sql.SQL(create_plc_table_commands.createSantaTeresa("santa_teresa_plc_values")))
+    cursor.execute(sql.SQL(create_plc_table_commands.createSantaTeresa("santa_teresa_plc_values_low_res")))
     cursor.execute(sql.SQL(create_plc_table_commands.createPryorFarms("pryor_farms_plc_values")))
+    cursor.execute(sql.SQL(create_plc_table_commands.createPryorFarms("pryor_farms_plc_values_low_res")))
     conn.close()
 
 create_metadata_tables()
