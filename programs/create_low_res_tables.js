@@ -1,4 +1,6 @@
 const { Client } = require('pg');
+const yargs = require('yargs/yargs');
+const { hideBin } = require('yargs/helpers');
 
 async function populate_low_res(
     postgresClient,
@@ -50,6 +52,15 @@ async function populate_low_res(
 }
 
 async function main() {
+    const argv = yargs(hideBin(process.argv))
+        .option('table_name', {
+            alias: 't',
+            type: 'string',
+            demandOption: true 
+        })
+        .argv;
+
+
     let postgresClient;
     try {
         postgresClient = new Client({
@@ -61,8 +72,8 @@ async function main() {
 
         await populate_low_res(
             postgresClient,
-            "bluerock_plc_values",
-            "bluerock_plc_values_low_res"
+            argv.table_name,
+            `${argv.table_name}_low_res`
         );
     } catch (e) {
         console.error("Error occurred:", e);
