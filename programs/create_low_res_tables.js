@@ -1,3 +1,5 @@
+const { Client } = require('pg');
+
 async function populate_low_res(
     postgresClient,
     plc_table_name,
@@ -14,30 +16,22 @@ async function populate_low_res(
     `;
 
     let first_date = undefined;
-    try {
-        const result = await postgresClient.query(get_earliest_date);
-        first_date = result.rows[0].plctime;
-    } catch (err) {
-        console.error(err);
-        throw err;
-    }
+    const result = await postgresClient.query(get_earliest_date);
+    first_date = result.rows[0].plctime;
 
     let current_date = first_date;
     for (let i = 0; ; i++) {
-        try {
-            const result = await postgresClient.query(
-                `
+
+        const result = await postgresClient.query(
+            `
                 SELECT *
                 FROM ${plc_table_name}
                 WHERE plctime >= '${current_date.toISOString()}'
                 ORDER BY plctime ASC LIMIT 1 ;
                 `
-            );
-            if (result.rows[0].length === 0) {
-                return;
-            }
-        } catch (err) {
-            console.error(err);
+        );
+
+        if (result.rows[0] === undefined || result.rows[0].length === 0) {
             return;
         }
 
@@ -54,3 +48,29 @@ async function populate_low_res(
         current_date = addhours(current_date, 6);
     }
 }
+
+async function main() {
+    let postgresClient;
+    try {
+        postgresClient = new Client({
+            database: 'waterexp',
+        });
+
+        await postgresClient.connect();
+        console.log("Connected to Postgres");
+
+        await populate_low_res(
+            postgresClient,
+            "bluerock_plc_values",
+            "bluerock_plc_values_low_res"
+        );
+    } catch (e) {
+        console.error("Error occurred:", e);
+    } finally {
+        if (postgresClient) {
+            await postgresClient.end();
+        }
+    }
+}
+
+main();
