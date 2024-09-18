@@ -1,0 +1,1 @@
+python3 ./programs/clean_tables.py "santa_teresa_plc_values"

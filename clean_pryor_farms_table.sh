@@ -1,0 +1,1 @@
+python3 ./programs/clean_tables.py "pryor_farms_plc_values"

@@ -3,7 +3,7 @@ import psycopg2
 from psycopg2 import sql
 
 class CleanArray:
-    def __init__(self, cursor, dbname):
+    def __init__(self, cursor, dbname, include_inlet_flow=True):
         self.cursor = cursor
         self.dbname = dbname
         self.sensors_to_clip = [ 
@@ -19,8 +19,10 @@ class CleanArray:
             "concentrateflow",
             "recycleflow",
             "dailypermflow",
-            "inletflow"
         ]
+
+        if include_inlet_flow:
+            self.sensors_to_clip += ["inletflow"]
 
         self.ro_states = {
             0: "off",
@@ -98,7 +100,7 @@ def clean_data(
         times = list(local_cursor.fetchall())
         return times[0][0]
     
-    clean_array = CleanArray(local_cursor, local_db_name)
+    clean_array = CleanArray(local_cursor, local_db_name, local_db_name != "bluerock_plc_values")
 
     i = 0
     while True:
