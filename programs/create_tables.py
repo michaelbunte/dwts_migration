@@ -6,8 +6,8 @@ def createWaterSystemTable(systemName, cursor):
     unit_table_name = f'{systemName}_unit_table'
     sensor_info_table_name = f'{systemName}_sensor_info'
     alarm_table_name = f'{systemName}_alarm_table'
-    data_table_name = f'{systemName}_plc_data'
-    low_res_data_table_name = f'{systemName}_plc_data_low_res'
+    data_table_name = f'{systemName}_plc_values'
+    low_res_data_table_name = f'{systemName}_plc_values_low_res'
 
     create_site_unit_table = (
         f'CREATE TABLE {unit_table_name} ('
