@@ -8,6 +8,7 @@ def createWaterSystemTable(systemName, cursor):
     alarm_table_name = f'{systemName}_alarm_table'
     data_table_name = f'{systemName}_plc_values'
     low_res_data_table_name = f'{systemName}_plc_values_low_res'
+    med_res_data_table_name = f'{systemName}_plc_values_med_res'
 
     create_site_unit_table = (
         f'CREATE TABLE {unit_table_name} ('
@@ -48,6 +49,7 @@ def createWaterSystemTable(systemName, cursor):
             site_name,
             data_sensor_table,
             low_res_table,
+            med_res_table,
             sensor_info_table,
             alarm_table,
             unit_table,
@@ -58,6 +60,7 @@ def createWaterSystemTable(systemName, cursor):
             '{systemName}',
             '{data_table_name}',
             '{low_res_data_table_name}',
+            '{med_res_data_table_name}',
             '{sensor_info_table_name}',
             '{alarm_table_name}',
             '{unit_table_name}',
@@ -80,6 +83,7 @@ def create_metadata_tables():
             + 'site_name VARCHAR(63) PRIMARY KEY NOT NULL, '
             + 'data_sensor_table VARCHAR(63), '
             + 'low_res_table VARCHAR(63), '
+            + 'med_res_table VARCHAR(63), '
             + 'sensor_info_table VARCHAR(63), '
             + 'alarm_table VARCHAR(63), '
             + 'unit_table VARCHAR(63), '
@@ -106,9 +110,12 @@ def create_plc_tables():
     cursor = conn.cursor()
     cursor.execute(sql.SQL(create_plc_table_commands.createBluerock("bluerock_plc_values")))
     cursor.execute(sql.SQL(create_plc_table_commands.createBluerock("bluerock_plc_values_low_res")))
+    cursor.execute(sql.SQL(create_plc_table_commands.createBluerock("bluerock_plc_values_med_res")))
     cursor.execute(sql.SQL(create_plc_table_commands.createSantaTeresa("santa_teresa_plc_values")))
+    cursor.execute(sql.SQL(create_plc_table_commands.createSantaTeresa("santa_teresa_plc_values_med_res")))
     cursor.execute(sql.SQL(create_plc_table_commands.createSantaTeresa("santa_teresa_plc_values_low_res")))
     cursor.execute(sql.SQL(create_plc_table_commands.createPryorFarms("pryor_farms_plc_values")))
+    cursor.execute(sql.SQL(create_plc_table_commands.createPryorFarms("pryor_farms_plc_values_med_res")))
     cursor.execute(sql.SQL(create_plc_table_commands.createPryorFarms("pryor_farms_plc_values_low_res")))
     conn.close()
 

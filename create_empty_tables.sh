@@ -1,0 +1,1 @@
+python3 ./programs/create_tables.py
