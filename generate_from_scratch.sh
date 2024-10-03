@@ -2,10 +2,10 @@ echo "initializing empty database"
 ./create_local_db.sh
 ./create_empty_tables.sh
 
-echo "downloading bluerock csv"
-./get_bluerock_csv.sh
-echo "downloading santa teresa csv"
-./get_santa_teresa_csv.sh
+# echo "downloading bluerock csv"
+# ./get_bluerock_csv.sh
+# echo "downloading santa teresa csv"
+# ./get_santa_teresa_csv.sh
 echo "downloading pryor farms csv"
 ./get_pryor_farms_csv.sh
 

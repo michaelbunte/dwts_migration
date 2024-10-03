@@ -5,12 +5,13 @@ const { hideBin } = require('yargs/helpers');
 async function populate_low_res(
     postgresClient,
     plc_table_name,
-    low_res_plc_table_name
+    low_res_plc_table_name,
+    gap_size
 ) {
 
     // https://stackoverflow.com/questions/1050720/how-to-add-hours-to-a-date-object
-    function addhours(date, h) {
-        date.setTime(date.getTime() + (h * 60 * 60 * 1000));
+    function addtime(date, t) {
+        date.setTime(date.getTime() + (t));
         return date;
     }
     const get_earliest_date = `
@@ -47,7 +48,7 @@ async function populate_low_res(
         `;
 
         await postgresClient.query(insert_string);
-        current_date = addhours(current_date, 6);
+        current_date = addtime(current_date, gap_size);
     }
 }
 
@@ -55,6 +56,16 @@ async function main() {
     const argv = yargs(hideBin(process.argv))
         .option('table_name', {
             alias: 't',
+            type: 'string',
+            demandOption: true 
+        })
+        .option('gap_size', {
+            alias: 'g',
+            type: 'number',
+            demandOption: true 
+        })
+        .option('extension_name', {
+            alias: 'e',
             type: 'string',
             demandOption: true 
         })
@@ -73,7 +84,8 @@ async function main() {
         await populate_low_res(
             postgresClient,
             argv.table_name,
-            `${argv.table_name}_low_res`
+            `${argv.table_name}${argv.extension_name}`,
+            argv.gap_size
         );
     } catch (e) {
         console.error("Error occurred:", e);
